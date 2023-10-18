@@ -6,7 +6,6 @@ import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native";
 import { Stack } from "expo-router";
 import globalStyles from "../../styles/global.style";
-import { View } from "react-native-web";
 
 async function getDebateDetails(id) {
   try {
@@ -59,7 +58,7 @@ export default function DebateItemDetails() {
   }
 
   if (debateData) {
-    return <DebateDetails debateData={debateData}></DebateDetails>;
+    return <DebateDetails data={debateData}></DebateDetails>;
   }
 
   //TODO: Implement error screen

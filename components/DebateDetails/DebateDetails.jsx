@@ -1,5 +1,12 @@
-import { View, Text, Image, FlatList, SafeAreaView } from "react-native";
-import { Stack, useRouter } from "expo-router";
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
+import { Stack } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import { useState } from "react";
 import axios from "axios";
@@ -8,52 +15,97 @@ import styles from "./debatedetails.style";
 import globalStyles from "../../styles/global.style";
 import Response from "../Response/Response";
 
-export default function DebateDetails({ debateData }) {
-  const router = useRouter();
+export default function DebateDetails({ data }) {
   const [responseText, setResponseText] = useState("");
-  const data = [
+  const [debateData, setDebateData] = useState([
     {
-      title: debateData.title,
-      category_names: debateData.category_names.join(", "),
-      summary: debateData.summary,
-      end_at: debateData.end_at,
-      picture_url: debateData.picture_url,
+      title: data.title,
+      category_names: data.category_names.join(", "),
+      summary: data.summary,
+      end_at: data.end_at,
+      picture_url: data.picture_url,
       is_response: false,
     },
-    ...debateData.responses.map((response) => ({
+    ...data.responses.map((response) => ({
       is_response: true,
       id: response.id,
       body: response.body,
       created_by: response.created_by,
       agree: response.agree,
       disagree: response.disagree,
+      userVoteChoice: null,
+      agreeDisabled: false,
+      disagreeDisabled: false,
     })),
-  ];
+  ]);
 
   const handleTextInputChange = (text) => {
     setResponseText(text);
   };
 
+  const modifyVote = async (responseId, method, userVoteChoice) => {
+    return await axios[method](
+      `https://3rphehipf2.execute-api.us-east-1.amazonaws.com/Prod/response/${responseId}/${userVoteChoice}`
+    )
+      .then((response) => {
+        return response.data;
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const toggleUserVoteChoice = async (responseId, userVoteChoice) => {
+    const updatedData = await Promise.all(
+      debateData.map(async (item) => {
+        if (item.is_response && item.id === responseId) {
+          let count = 0;
+          if (item.userVoteChoice === userVoteChoice) {
+            // If the same option is selected again, unselect it
+            item.userVoteChoice = null;
+            item.agreeDisabled = false;
+            item.disagreeDisabled = false;
+            count = await modifyVote(responseId, "delete", userVoteChoice);
+          } else {
+            item.userVoteChoice = userVoteChoice;
+            if (userVoteChoice === "agree") {
+              item.disagreeDisabled = true;
+            } else {
+              item.agreeDisabled = true;
+            }
+            count = await modifyVote(responseId, "post", userVoteChoice);
+          }
+          item[userVoteChoice] = count;
+        }
+        return item;
+      })
+    );
+    setDebateData(updatedData);
+  };
+
   async function handleResponseSubmit() {
     await axios
       .post(
-        `https://3rphehipf2.execute-api.us-east-1.amazonaws.com/Prod/debate/response`,
+        `https://3rphehipf2.execute-api.us-east-1.amazonaws.com/Prod/response`,
         {
           body: responseText,
-          debate_id: debateData.id,
+          debate_id: data.id,
           created_by_id: 1,
         }
       )
       .then((response) => {
         // Add new response so it immediately appears
-        debateData.responses.push(response.data);
+        const tmp = debateData;
+        tmp.push({
+          ...response.data,
+          is_response: true,
+          userVoteChoice: null,
+        });
+        setDebateData(tmp);
         setResponseText("");
       })
       .catch((e) => {
         console.log(e);
-      })
-      .finally(() => {
-        setIsRefreshing(false);
       });
   }
 
@@ -68,7 +120,7 @@ export default function DebateDetails({ debateData }) {
         }}
       />
       <FlatList
-        data={data}
+        data={debateData}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <View style={{ flex: 1 }}>
@@ -114,20 +166,55 @@ export default function DebateDetails({ debateData }) {
                 <Text style={styles.responseBody}>{item.body}</Text>
                 <View style={globalStyles.bottomRight}>
                   <View style={{ flexDirection: "row" }}>
-                    <AntDesign
-                      name="like2"
-                      size={20}
-                      color="white"
-                      style={{ marginRight: 8 }}
-                    />
-                    <Text style={styles.responseVotes}>{item.agree}</Text>
-                    <AntDesign
-                      name="dislike2"
-                      size={20}
-                      color="white"
-                      style={{ marginRight: 8, marginLeft: 16 }}
-                    />
-                    <Text style={styles.responseVotes}>{item.disagree}</Text>
+                    <TouchableOpacity
+                      onPress={() => toggleUserVoteChoice(item.id, "agree")}
+                      disabled={item.agreeDisabled}
+                      style={{ flexDirection: "row" }}
+                    >
+                      <AntDesign
+                        name={
+                          item.userVoteChoice === "agree" ? "like1" : "like2"
+                        }
+                        size={20}
+                        color={item.agreeDisabled === true ? "gray" : "white"}
+                        style={{ marginRight: 8 }}
+                      />
+                      <Text
+                        style={{
+                          ...styles.responseVotes,
+                          color: item.agreeDisabled === true ? "gray" : "white",
+                        }}
+                      >
+                        {item.agree}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => toggleUserVoteChoice(item.id, "disagree")}
+                      disabled={item.disagreeDisabled}
+                      style={{ flexDirection: "row" }}
+                    >
+                      <AntDesign
+                        name={
+                          item.userVoteChoice === "disagree"
+                            ? "dislike1"
+                            : "dislike2"
+                        }
+                        size={20}
+                        color={
+                          item.disagreeDisabled === true ? "gray" : "white"
+                        }
+                        style={{ marginRight: 8, marginLeft: 16 }}
+                      />
+                      <Text
+                        style={{
+                          ...styles.responseVotes,
+                          color:
+                            item.disagreeDisabled === true ? "gray" : "white",
+                        }}
+                      >
+                        {item.disagree}
+                      </Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
               </View>
