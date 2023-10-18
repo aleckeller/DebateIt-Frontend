@@ -10,10 +10,8 @@ import {
 import styles from "./response.style";
 
 const Response = ({ onPress, onSubmit, value }) => {
-  const minHeight = 35; // Minimum height
-  const maxHeight = 100; // Maximum height
   const initialHeight = 35;
-  const initialContainerHeight = 50;
+  const initialContainerHeight = 67;
   const [height, setHeight] = useState(initialHeight);
   const [containerHeight, setContainerHeight] = useState(
     initialContainerHeight
@@ -21,12 +19,17 @@ const Response = ({ onPress, onSubmit, value }) => {
   const [showPostButton, setShowPostButton] = useState(false);
 
   return (
-    <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={150}>
-      <View style={{ ...styles.container, height: containerHeight }}>
+    <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={110}>
+      <View
+        style={{
+          ...styles.container,
+          height: Math.max(initialContainerHeight, containerHeight),
+        }}
+      >
         <TextInput
           style={{
             ...styles.input,
-            height: height,
+            height: Math.max(initialHeight, height),
           }}
           multiline={true}
           onChangeText={(text) => onPress(text)}
@@ -40,19 +43,32 @@ const Response = ({ onPress, onSubmit, value }) => {
           }}
           onBlur={() => {
             setShowPostButton(false);
+            setContainerHeight(containerHeight - 50);
           }}
           onContentSizeChange={(event) => {
-            const newHeight = event.nativeEvent.contentSize.height;
-            // Ensure the height change is within the specified range
-            setHeight(Math.min(Math.max(newHeight, minHeight), maxHeight));
-            setContainerHeight(newHeight + 30);
+            if (event.nativeEvent.contentSize.height < 68) {
+              setHeight(event.nativeEvent.contentSize.height);
+              setContainerHeight(
+                Math.max(
+                  event.nativeEvent.contentSize.height + 45,
+                  containerHeight
+                )
+              );
+            }
           }}
         />
-        {showPostButton && (
-          <TouchableOpacity onPress={onSubmit} style={styles.submitButton}>
-            <Text>Post</Text>
-          </TouchableOpacity>
-        )}
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          <View style={{ flex: 1 }}></View>
+          {showPostButton && (
+            <TouchableOpacity onPress={onSubmit} style={styles.submitButton}>
+              <Text style={{ textAlign: "center" }}>Post</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </KeyboardAvoidingView>
   );

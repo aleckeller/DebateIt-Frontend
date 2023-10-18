@@ -2,7 +2,6 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
-    // flexDirection: "column",
     backgroundColor: "black",
     width: "100%",
     justifyContent: "center",
@@ -16,13 +15,16 @@ const styles = StyleSheet.create({
     alignContent: "center",
     paddingLeft: 10,
     paddingTop: 10,
+    padding: 10,
   },
   submitButton: {
-    backgroundColor: "blue", // Change the background color as needed
-    borderRadius: 20, // Make it circular
+    backgroundColor: "#6495ED",
+    borderRadius: 15,
     padding: 10,
     marginTop: 10,
     width: "15%",
+    height: 35,
+    textAlign: "center",
   },
 });
 export default styles;

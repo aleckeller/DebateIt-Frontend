@@ -1,10 +1,12 @@
 import { useLocalSearchParams } from "expo-router";
 import { DebateDetails } from "../../components";
+import LoadingIndicator from "../../components/LoadingIndicator/LoadingIndicator";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native";
 import { Stack } from "expo-router";
 import globalStyles from "../../styles/global.style";
+import { View } from "react-native-web";
 
 async function getDebateDetails(id) {
   try {
@@ -25,6 +27,7 @@ export default function DebateItemDetails() {
   const { id } = useLocalSearchParams();
 
   const [debateData, setDebateData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getDebateDetails(id)
@@ -33,11 +36,13 @@ export default function DebateItemDetails() {
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [id]);
-  if (debateData) {
-    return <DebateDetails debateData={debateData}></DebateDetails>;
-  } else {
+
+  if (isLoading) {
     return (
       <SafeAreaView style={globalStyles.container}>
         <Stack.Screen
@@ -48,7 +53,14 @@ export default function DebateItemDetails() {
             headerBackTitleVisible: true,
           }}
         />
+        <LoadingIndicator></LoadingIndicator>
       </SafeAreaView>
     );
   }
+
+  if (debateData) {
+    return <DebateDetails debateData={debateData}></DebateDetails>;
+  }
+
+  //TODO: Implement error screen
 }

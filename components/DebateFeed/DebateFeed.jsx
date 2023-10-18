@@ -1,9 +1,17 @@
-import React, { PureComponent } from "react";
-import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
+import { PureComponent, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  RefreshControl,
+} from "react-native";
 import axios from "axios";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import styles from "./debatefeed.style";
+import LoadingIndicator from "../LoadingIndicator/LoadingIndicator";
 
 class DebateItem extends PureComponent {
   render() {
@@ -82,10 +90,11 @@ class DebateItem extends PureComponent {
 
 const DebateFeed = () => {
   const router = useRouter();
-  const [debates, setDebates] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
+  const [debates, setDebates] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
@@ -98,18 +107,19 @@ const DebateFeed = () => {
         console.error("Failed to fetch debates:", error);
       } finally {
         setLoading(false);
+        setIsRefreshing(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [isRefreshing]);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+  };
 
   if (loading) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <LoadingIndicator></LoadingIndicator>;
   }
 
   return (
@@ -120,6 +130,9 @@ const DebateFeed = () => {
         renderItem={({ item }) => <DebateItem item={item} router={router} />}
         showsVerticalScrollIndicator={false}
         windowSize={5}
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+        }
       />
     </View>
   );

@@ -1,13 +1,15 @@
 import { View, Text, Image, FlatList, SafeAreaView } from "react-native";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import { useState } from "react";
+import axios from "axios";
 
 import styles from "./debatedetails.style";
 import globalStyles from "../../styles/global.style";
 import Response from "../Response/Response";
 
 export default function DebateDetails({ debateData }) {
+  const router = useRouter();
   const [responseText, setResponseText] = useState("");
   const data = [
     {
@@ -32,9 +34,28 @@ export default function DebateDetails({ debateData }) {
     setResponseText(text);
   };
 
-  const handleResponseSubmit = () => {
-    console.log(responseText);
-  };
+  async function handleResponseSubmit() {
+    await axios
+      .post(
+        `https://3rphehipf2.execute-api.us-east-1.amazonaws.com/Prod/debate/response`,
+        {
+          body: responseText,
+          debate_id: debateData.id,
+          created_by_id: 1,
+        }
+      )
+      .then((response) => {
+        // Add new response so it immediately appears
+        debateData.responses.push(response.data);
+        setResponseText("");
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+      .finally(() => {
+        setIsRefreshing(false);
+      });
+  }
 
   return (
     <SafeAreaView style={globalStyles.container}>
