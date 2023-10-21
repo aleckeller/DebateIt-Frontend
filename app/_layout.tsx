@@ -43,7 +43,7 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const theme = createTheme({
-    mode: "dark",
+    mode: "light",
   });
 
   return (
@@ -52,10 +52,28 @@ function RootLayoutNav() {
         <Stack.Screen
           name="(tabs)"
           options={{
-            headerShown: false,
+            headerTitle: "",
+            headerStyle: {
+              backgroundColor:
+                theme.mode == "light"
+                  ? theme.lightColors?.background
+                  : theme.darkColors?.background,
+            },
           }}
         />
-        {/* <Stack.Screen name="modal" options={{ presentation: "modal" }} /> */}
+        <Stack.Screen
+          name="feed-item-details/[id]"
+          options={{
+            headerTitle: "",
+            headerStyle: {
+              backgroundColor:
+                theme.mode == "light"
+                  ? theme.lightColors?.background
+                  : theme.darkColors?.background,
+            },
+            presentation: "card",
+          }}
+        />
       </Stack>
     </ThemeProvider>
   );
