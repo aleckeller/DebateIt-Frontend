@@ -8,7 +8,9 @@ export default function Details({ data }: { data: DetailsStateInterface }) {
   return (
     <View>
       <View style={styles.topRight}>
-        <Text style={styles.endAt}>{data.end_at} left</Text>
+        <Text style={styles.endAt}>
+          {data.end_at != "Finished" ? `${data.end_at} left` : data.end_at}
+        </Text>
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{data.title}</Text>

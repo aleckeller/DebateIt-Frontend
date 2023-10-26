@@ -1,12 +1,6 @@
 import { makeStyles, Button, useTheme } from "@rneui/themed";
 import React, { useState } from "react";
-import {
-  Text,
-  View,
-  KeyboardAvoidingView,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { View, KeyboardAvoidingView, TextInput } from "react-native";
 
 export default function AddResponse({
   onPress,

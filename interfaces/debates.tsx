@@ -42,3 +42,14 @@ export interface DetailsStateInterface extends CoreDetailsInterface {
 export interface ResponseStateInterface extends ResponseInterface {
   is_response: boolean;
 }
+
+export interface CreateDebateInterface {
+  title: string;
+  summary: string;
+  endAt: Date;
+  selectedCategories: Category[];
+}
+
+export interface Category {
+  id: number;
+}

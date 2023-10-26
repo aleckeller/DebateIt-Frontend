@@ -1,8 +1,10 @@
+import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { createTheme, ThemeProvider } from "@rneui/themed";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { SplashScreen, Stack, router } from "expo-router";
 import { useEffect } from "react";
+import { TouchableOpacity } from "react-native";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -43,7 +45,7 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const theme = createTheme({
-    mode: "light",
+    mode: "dark",
   });
 
   return (
@@ -59,6 +61,21 @@ function RootLayoutNav() {
                   ? theme.lightColors?.background
                   : theme.darkColors?.background,
             },
+            headerRight: () => (
+              <TouchableOpacity onPress={() => router.push(`/create-debate`)}>
+                <Ionicons
+                  name={
+                    theme.mode == "light" ? "add-circle" : "add-circle-outline"
+                  }
+                  size={30}
+                  color={
+                    theme.mode == "light"
+                      ? theme.lightColors?.black
+                      : theme.darkColors?.black
+                  }
+                />
+              </TouchableOpacity>
+            ),
           }}
         />
         <Stack.Screen
@@ -71,7 +88,24 @@ function RootLayoutNav() {
                   ? theme.lightColors?.background
                   : theme.darkColors?.background,
             },
-            presentation: "card",
+          }}
+        />
+        <Stack.Screen
+          name="create-debate"
+          options={{
+            headerTitle: "Create a Debate",
+            headerStyle: {
+              backgroundColor:
+                theme.mode == "light"
+                  ? theme.lightColors?.background
+                  : theme.darkColors?.background,
+            },
+            headerTitleStyle: {
+              color:
+                theme.mode == "light"
+                  ? theme.lightColors?.black
+                  : theme.darkColors?.black,
+            },
           }}
         />
       </Stack>
