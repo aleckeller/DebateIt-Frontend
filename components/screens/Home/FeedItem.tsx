@@ -54,7 +54,7 @@ export default function FeedItem({ details }: { details: FeedItemInterface }) {
             <Text style={styles.replies}>{details.response_count}</Text>
             <FontAwesome5 name="crown" style={styles.icons}></FontAwesome5>
             <Text style={styles.leader}>
-              {details.winner ? details.winner : "N/A"}
+              {details.leader ? details.leader : "N/A"}
             </Text>
           </View>
         </View>

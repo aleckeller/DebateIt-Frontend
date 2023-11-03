@@ -5,7 +5,7 @@ export interface FeedItemInterface {
   summary: string;
   picture_url: string;
   end_at: string;
-  winner: string;
+  leader: string;
   created_by: string;
   response_count: number;
 }
@@ -17,6 +17,8 @@ export interface CoreDetailsInterface {
   end_at: string;
   picture_url: string;
   created_by: string;
+  leader: string;
+  response_count: number;
 }
 
 export interface ResponseInterface {

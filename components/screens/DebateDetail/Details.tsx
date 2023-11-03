@@ -1,4 +1,5 @@
 import { DetailsStateInterface } from "@/interfaces/debates";
+import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { makeStyles, useTheme } from "@rneui/themed";
 import { View, Image, Text } from "react-native";
 
@@ -16,9 +17,52 @@ export default function Details({ data }: { data: DetailsStateInterface }) {
         <Text style={styles.title}>{data.title}</Text>
         <Text style={styles.categories}>{data.category_names}</Text>
         <Text style={styles.summary}>{data.summary}</Text>
-        <Text style={{ color: theme.colors.black }}>
-          Created By: {data.created_by}
-        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={{ color: theme.colors.black }}>
+            Created By: {data.created_by}
+          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <FontAwesome
+              name="comment-o"
+              style={{
+                color: theme.colors.black,
+                marginRight: 8,
+                marginTop: 2,
+              }}
+            ></FontAwesome>
+            <Text
+              style={{
+                color: theme.colors.grey1,
+                marginBottom: 3,
+                marginRight: 16,
+              }}
+            >
+              {data.response_count}
+            </Text>
+            <FontAwesome5
+              name="crown"
+              style={{
+                color: theme.colors.black,
+                marginRight: 8,
+                marginTop: 2,
+              }}
+            ></FontAwesome5>
+            <Text
+              style={{
+                color: theme.colors.grey1,
+                marginBottom: 3,
+                marginRight: 6,
+              }}
+            >
+              {data.leader ? data.leader : "N/A"}
+            </Text>
+          </View>
+        </View>
       </View>
       {data.picture_url && (
         <Image

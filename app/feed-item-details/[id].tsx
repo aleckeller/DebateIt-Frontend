@@ -39,6 +39,8 @@ export default function FeedItemDetailsScreen() {
           end_at: rawData.end_at,
           picture_url: rawData.picture_url,
           created_by: rawData.created_by,
+          leader: rawData.leader,
+          response_count: rawData.response_count,
           is_response: false,
         };
         const responseData = rawData.responses.map(
