@@ -1,0 +1,101 @@
+{
+  "auth": {
+    "debateitfrontenda5e6dcba": {
+      "customAuth": false,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "serviceType": "imported"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_auth_debateitfrontenda5e6dcba_allowUnauthenticatedIdentities": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "debateitfrontenda5e6dcba"
+        }
+      ]
+    },
+    "AMPLIFY_auth_debateitfrontenda5e6dcba_authRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "debateitfrontenda5e6dcba"
+        }
+      ]
+    },
+    "AMPLIFY_auth_debateitfrontenda5e6dcba_authRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "debateitfrontenda5e6dcba"
+        }
+      ]
+    },
+    "AMPLIFY_auth_debateitfrontenda5e6dcba_identityPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "debateitfrontenda5e6dcba"
+        }
+      ]
+    },
+    "AMPLIFY_auth_debateitfrontenda5e6dcba_identityPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "debateitfrontenda5e6dcba"
+        }
+      ]
+    },
+    "AMPLIFY_auth_debateitfrontenda5e6dcba_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "debateitfrontenda5e6dcba"
+        }
+      ]
+    },
+    "AMPLIFY_auth_debateitfrontenda5e6dcba_unauthRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "debateitfrontenda5e6dcba"
+        }
+      ]
+    },
+    "AMPLIFY_auth_debateitfrontenda5e6dcba_unauthRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "debateitfrontenda5e6dcba"
+        }
+      ]
+    },
+    "AMPLIFY_auth_debateitfrontenda5e6dcba_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "debateitfrontenda5e6dcba"
+        }
+      ]
+    },
+    "AMPLIFY_auth_debateitfrontenda5e6dcba_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "debateitfrontenda5e6dcba"
+        }
+      ]
+    },
+    "AMPLIFY_auth_debateitfrontenda5e6dcba_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "debateitfrontenda5e6dcba"
+        }
+      ]
+    }
+  }
+}

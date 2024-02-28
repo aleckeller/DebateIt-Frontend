@@ -1,10 +1,16 @@
 import { StyleSheet, Text, View } from "react-native";
+import { useAuthenticator } from "@aws-amplify/ui-react-native";
+import { Button } from "@rneui/themed";
 
 export default function ProfileScreen() {
+  const { user, signOut } = useAuthenticator((context) => [context.user]);
+
   return (
     <View style={styles.container}>
+      <Text>{`Welcome, ${user.username}!`}</Text>
       <Text style={styles.title}>Profile</Text>
       <View style={styles.separator} />
+      <Button title="Sign Out" onPress={signOut} />
     </View>
   );
 }

@@ -5,6 +5,12 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack, router } from "expo-router";
 import { useEffect } from "react";
 import { TouchableOpacity } from "react-native";
+import { Amplify } from "aws-amplify";
+import { Authenticator } from "@aws-amplify/ui-react-native";
+
+import awsExports from "./aws-exports";
+
+Amplify.configure(awsExports);
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -50,65 +56,73 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Stack>
-        <Stack.Screen
-          name="(tabs)"
-          options={{
-            headerTitle: "",
-            headerStyle: {
-              backgroundColor:
-                theme.mode == "light"
-                  ? theme.lightColors?.background
-                  : theme.darkColors?.background,
-            },
-            headerRight: () => (
-              <TouchableOpacity onPress={() => router.push(`/create-debate`)}>
-                <Ionicons
-                  name={
-                    theme.mode == "light" ? "add-circle" : "add-circle-outline"
-                  }
-                  size={30}
-                  color={
+      <Authenticator.Provider>
+        <Authenticator>
+          <Stack>
+            <Stack.Screen
+              name="(tabs)"
+              options={{
+                headerTitle: "",
+                headerStyle: {
+                  backgroundColor:
+                    theme.mode == "light"
+                      ? theme.lightColors?.background
+                      : theme.darkColors?.background,
+                },
+                headerRight: () => (
+                  <TouchableOpacity
+                    onPress={() => router.push(`/create-debate`)}
+                  >
+                    <Ionicons
+                      name={
+                        theme.mode == "light"
+                          ? "add-circle"
+                          : "add-circle-outline"
+                      }
+                      size={30}
+                      color={
+                        theme.mode == "light"
+                          ? theme.lightColors?.black
+                          : theme.darkColors?.black
+                      }
+                    />
+                  </TouchableOpacity>
+                ),
+              }}
+            />
+            <Stack.Screen
+              name="feed-item-details/[id]"
+              options={{
+                headerTitle: "",
+                headerStyle: {
+                  backgroundColor:
+                    theme.mode == "light"
+                      ? theme.lightColors?.background
+                      : theme.darkColors?.background,
+                },
+              }}
+            />
+            <Stack.Screen
+              name="create-debate"
+              options={{
+                headerTitle: "Create a Debate",
+                headerStyle: {
+                  backgroundColor:
+                    theme.mode == "light"
+                      ? theme.lightColors?.background
+                      : theme.darkColors?.background,
+                },
+                headerTitleStyle: {
+                  color:
                     theme.mode == "light"
                       ? theme.lightColors?.black
-                      : theme.darkColors?.black
-                  }
-                />
-              </TouchableOpacity>
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="feed-item-details/[id]"
-          options={{
-            headerTitle: "",
-            headerStyle: {
-              backgroundColor:
-                theme.mode == "light"
-                  ? theme.lightColors?.background
-                  : theme.darkColors?.background,
-            },
-          }}
-        />
-        <Stack.Screen
-          name="create-debate"
-          options={{
-            headerTitle: "Create a Debate",
-            headerStyle: {
-              backgroundColor:
-                theme.mode == "light"
-                  ? theme.lightColors?.background
-                  : theme.darkColors?.background,
-            },
-            headerTitleStyle: {
-              color:
-                theme.mode == "light"
-                  ? theme.lightColors?.black
-                  : theme.darkColors?.black,
-            },
-          }}
-        />
-      </Stack>
+                      : theme.darkColors?.black,
+                },
+              }}
+            />
+          </Stack>
+        </Authenticator>
+      </Authenticator.Provider>
     </ThemeProvider>
   );
 }
